@@ -1,0 +1,163 @@
+/*
+ * Almost lineaR algorIthm for finding undirparEnts (ARIE)
+ *
+ * Version Alpha 1
+ *
+ * A library for calculating undirparents
+ *
+ * Written by Sam Alexander, 11 Nov 2013
+ *
+ * arie.txt: Documentation
+ *
+ * For working demonstration, visit:
+ *   http://www.semitrivial.com/arie.php
+ */
+
+-----------------------------------------------------
+WHAT IS ARIE?
+-----------------------------------------------------
+
+Arie is a C library for calculating undirparent
+relationships in finite genealogical networks.
+
+The algorithm is due to Arie de Bruin.
+
+
+-----------------------------------------------------
+INSTALLATION
+-----------------------------------------------------
+
+To use the library, simply include arie.c and arie.h
+with the other C files in whatever project you like.
+#include "arie.h" in any .c file where you'd like to
+invoke the ARIE library.
+
+
+-----------------------------------------------------
+FUNCTION DOCUMENTATION
+-----------------------------------------------------
+
+The library has four functions intended for usage
+in outside projects.  They are as follows.
+
+******
+arie_undirparent_calculator
+******
+
+Declaration:
+void arie_undirparent_calculator( organism *oldest, organism *youngest );
+
+Input:
+The head ("oldest") and tail ("youngest") of a doubly-linked list
+of "organism" data structures.  In short, a finite genealogical network.
+
+Assumptions:
+1. The doubly-linked list is ordered from oldest organism
+   to youngest.
+2. Parents are born before children.
+
+If these assumptions are violated, expect crashes or infinite loops.
+It's up to the user of the library to sanitize networks beforehand.
+
+How to read output:
+The function has no output directly.
+Instead, it sets the "undirparent" fields of each organism in the
+doubly-linked lists, so that each organism's "undirparent" pointer
+points to its undirparent organism.  Organisms with no undirparent
+will have "undirparent" pointer set to NULL.
+
+
+******
+new_organism
+******
+
+Declaration:
+organism *new_organism( void );
+
+Input:
+none
+
+Assumptions:
+none
+
+Output:
+A pointer to a blank organism structure in RAM.
+This can be manipulated using the functions below.
+One would use these as building blocks of one's
+network, to build the doubly-linked list to pass
+to arie_undirparent_calculator.
+
+
+******
+new_edge
+******
+
+Declaration:
+void new_edge( organism *parent, organism *child );
+
+Input:
+Pointers to two organisms.
+
+Assumptions:
+Parent should be born before child.  Otherwise,
+expect ill behaviour.
+
+Effect:
+Records a parental relationship, for usage in the
+undirparent calculation.
+
+
+******
+free_organism
+******
+
+Declaration:
+void free_organism( organism *o );
+
+Input:
+Pointer to an organism.
+
+Assumptions:
+Organism is stored in valid, properly allocated RAM.
+
+Effect:
+De-allocates the RAM stored for the organism.
+Used to manage memory (mainly for if the library
+is used as part of a persistent server or something).
+
+
+-----------------------------------------------------
+The Organism Data Structure
+-----------------------------------------------------
+
+The organism data structure consists of six fields,
+but three are for internal usage, and only three
+are important for users of the library.
+
+
+******
+organism *next
+******
+A pointer to the next organism in a doubly-linked list.
+Use this to create a doubly-linked list to pass
+to arie_undirparent_calculator.
+
+
+******
+organism *prev
+******
+A pointer to the previous organism in a doubly-linked
+list.  Similar to organism *next.
+
+
+******
+organism *undirparent
+******
+The organisms returned by "new_organism" have this
+field set to NULL by default.  After passing a
+doubly-linked list to arie_undirparent_calculator,
+this field will be used to store (for each member
+of the list) a pointer to the organism's undir-
+parent.  If the field remains NULL after running
+arie_undirparent_calculator, the organism is an
+undir-root.
