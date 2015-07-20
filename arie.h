@@ -67,23 +67,24 @@ struct ORGANISM
 struct CHILD_DATUM
 {
   child_datum *next;
-  child_datum *prev;
   organism *child;
 };
 
 struct CONNECTED_COMPONENT
 {
   connected_component *next;
-  connected_component *prev;
+
   /*
    * The "orphan" of a connected component is its oldest member.
    */
   organism *orphan;
+
   /*
    * The "backpointer" of a component (if not self-pointing) points to a bigger component
    * into which the component has been merged.
    */
   connected_component *backpointer;
+
   /*
    * Estimate of length of longest path in the component
    */
@@ -116,9 +117,23 @@ do                                                                              
 } while(0)
 
 /*
- * Doubly linked list macros
+ * singly linked insert
  */
-#define ARIELINK(link, first, last, next, prev)                         \
+#define ARIELINK(link, first, last, next)\
+do\
+{\
+  (link)->next = NULL;\
+  if ( last )\
+    (last)->next = (link);\
+  else\
+    (first) = (link);\
+  (last) = (link);\
+} while(0)
+
+/*
+ * Doubly linked insert
+ */
+#define ARIELINK2(link, first, last, next, prev)                        \
 do                                                                      \
 {                                                                       \
    if ( !(first) )                                                      \
@@ -134,31 +149,6 @@ do                                                                      \
    else                                                                 \
       (link)->prev = (last);                                            \
    (last) = (link);                                                     \
-} while(0)
-
-#define ARIEUNLINK(link, first, last, next, prev)                       \
-do                                                                      \
-{                                                                       \
-        if ( !(link)->prev )                                            \
-        {                                                               \
-         (first) = (link)->next;                                        \
-           if ((first))                                                 \
-              (first)->prev = NULL;                                     \
-        }                                                               \
-        else                                                            \
-        {                                                               \
-         (link)->prev->next = (link)->next;                             \
-        }                                                               \
-        if ( !(link)->next )                                            \
-        {                                                               \
-         (last) = (link)->prev;                                         \
-           if ((last))                                                  \
-              (last)->next = NULL;                                      \
-        }                                                               \
-        else                                                            \
-        {                                                               \
-         (link)->next->prev = (link)->prev;                             \
-        }                                                               \
 } while(0)
 
 /*

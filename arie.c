@@ -116,7 +116,7 @@ void new_edge( organism *parent, organism *child )
   ARIECREATE( edge, child_datum, 1 );
   edge->child = child;
 
-  ARIELINK( edge, parent->first_child, parent->last_child, next, prev );
+  ARIELINK( edge, parent->first_child, parent->last_child, next );
 }
 
 void free_organism( organism *o )
@@ -268,7 +268,7 @@ connected_component *create_singleton_component( organism *o )
   c->backpointer = c;
   c->depth = 1;
 
-  ARIELINK( c, first_component, last_component, next, prev );
+  ARIELINK( c, first_component, last_component, next );
 
   o->component = c;
 
