@@ -29,7 +29,6 @@ typedef struct ORGANISM organism;
 typedef struct CHILD_DATUM child_datum;
 typedef struct CONNECTED_COMPONENT connected_component;
 
-
 /*
  * Data structures
  */
@@ -62,6 +61,11 @@ struct ORGANISM
    * store a link from the organism to a connected component.
    */
   connected_component *component;
+
+  /*
+   * An optional ID field which can be set using set_organism_id.
+   */
+  char *id;
 };
 
 struct CHILD_DATUM
@@ -99,6 +103,7 @@ struct CONNECTED_COMPONENT
  */
 void arie_undirparent_calculator( organism *oldest, organism *youngest );
 organism *new_organism( void );
+void set_organism_id( organism *o, const char *id );
 void new_edge( organism *parent, organism *child );
 void free_organism( organism *o );
 

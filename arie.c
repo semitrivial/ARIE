@@ -13,6 +13,7 @@
  *   http://www.semitrivial.com/arie.php
  */
 
+#include <string.h>
 #include "arie.h"
 
 /*
@@ -100,8 +101,17 @@ organism *new_organism( void )
   o->last_child = NULL;
   o->undirparent = NULL;
   o->component = NULL;
+  o->id = NULL;
 
   return o;
+}
+
+void set_organism_id( organism *o, const char *id )
+{
+  if ( o->id )
+    free( o->id );
+
+  o->id = strdup( id );
 }
 
 void new_edge( organism *parent, organism *child )
@@ -132,6 +142,9 @@ void free_organism( organism *o )
     edge_next = edge->next;
     free( edge );
   }
+
+  if ( o->id )
+    free( o->id );
 
   free( o );
 }

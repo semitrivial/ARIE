@@ -87,6 +87,17 @@ One would use these as building blocks of one's
 network, to build the doubly-linked list to pass
 to arie_undirparent_calculator.
 
+******
+set_organism_id
+******
+
+Declaration:
+void set_organims_id( organism *o, const char *id );
+
+Sets the organism's "id" field to be an strdup'd copy of id.
+This is unnecessary for using the undirparent algorithm, it's
+just an optional convenience mechanism to help identify which
+organism is which.
 
 ******
 new_edge
